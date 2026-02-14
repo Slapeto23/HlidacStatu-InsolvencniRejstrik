@@ -1,0 +1,55 @@
+From 34b0ae6c3c26d6be79b83ade29536395f3884525 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 14 Feb 2026 20:14:41 +0000
+Subject: [PATCH] Add Czech README
+
+- Add README.cs.md with Czech project description
+
+https://claude.ai/code/session_01VcMEvQucz22w1NrnLvAWdr
+---
+ README.cs.md | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 README.cs.md
+
+diff --git a/README.cs.md b/README.cs.md
+new file mode 100644
+index 00000000..793ce468
+--- /dev/null
++++ b/README.cs.md
+@@ -0,0 +1,33 @@
++# Prirucka pro Python balickovani
++
++http://packaging.python.org
++
++"Python Packaging User Guide" (PyPUG) je autoritativni zdroj informaci o tom, jak balit a instalovat distribuce v Pythonu pomoci soucasnych nastroju.
++
++## O projektu
++
++Toto je fork oficialniho repozitare [pypa/packaging.python.org](https://github.com/pypa/packaging.python.org). Projekt obsahuje dokumentaci ve formatu reStructuredText, ktera je sestavena pomoci Sphinx a hostovana na Read the Docs.
++
++## Obsah dokumentace
++
++- **Tutorialy** -- Krok za krokem, jak zacit s balickovanim
++- **Navody** -- Prakticke navody pro baleni, instalaci a publikovani
++- **Specifikace** -- Technicke standardy (pyproject.toml, PEP 517 atd.)
++- **Diskuze** -- Koncepty a best practices
++
++## Lokalni sestaveni
++
++```bash
++pip install nox
++nox -s build
++```
++
++Vysledek se ulozi do slozky `build/`.
++
++## Prispivani
++
++Prirucka je spravovana komunitou a prispevky jsou vitany. Viz [contributing guide](https://packaging.python.org/contribute).
++
++## Licence
++
++Creative Commons Attribution-ShareAlike 3.0.
+-- 
+2.43.0
+

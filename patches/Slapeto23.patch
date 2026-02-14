@@ -1,0 +1,164 @@
+From 6cbb31a9ef9f6e5954c58147407b8f4807552601 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 14 Feb 2026 20:14:34 +0000
+Subject: [PATCH] Fix security issues, improve .gitignore, add Czech README
+
+- Remove hardcoded default JWT secret; require secret in constructor
+- Replace internal proxy URL in package.json with GitHub URL
+- Expand .gitignore with standard Node.js patterns
+- Add README.md with Czech project description
+- Update tests for required secret parameter (all 69 pass)
+
+https://claude.ai/code/session_01VcMEvQucz22w1NrnLvAWdr
+---
+ .gitignore             | 18 ++++++++++++++
+ README.md              | 55 ++++++++++++++++++++++++++++++++++++++++++
+ __tests__/auth.test.js |  9 ++++---
+ package.json           |  2 +-
+ src/auth.js            |  6 +++--
+ 5 files changed, 84 insertions(+), 6 deletions(-)
+ create mode 100644 README.md
+
+diff --git a/.gitignore b/.gitignore
+index c2658d7..91fda14 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1 +1,19 @@
+ node_modules/
++dist/
++build/
++coverage/
++
++.env
++.env.local
++.env.*.local
++
++*.log
++npm-debug.log*
++yarn-debug.log*
++
++.DS_Store
++.idea/
++.vscode/
++*.swp
++*.swo
++*~
+diff --git a/README.md b/README.md
+new file mode 100644
+index 0000000..8a133a7
+--- /dev/null
++++ b/README.md
+@@ -0,0 +1,55 @@
++# Autentizacni modul (Node.js)
++
++Jednoduchy autentizacni modul pro Node.js aplikace. Poskytuje registraci uzivatelu, prihlasovani, spravu JWT tokenu a middleware pro Express.js.
++
++## Funkce
++
++- Registrace a prihlasovani uzivatelu s hashovanim hesel (bcrypt)
++- Generovani a overovani JWT access a refresh tokenu
++- Odvolani (revokace) tokenu
++- Middleware pro autentizaci a autorizaci (role-based)
++- Sprava uzivatelu (vypis, smazani)
++
++## Instalace
++
++```bash
++npm install
++```
++
++## Pouziti
++
++```javascript
++const AuthModule = require('./src/auth');
++
++const auth = new AuthModule({ secret: 'vas-tajny-klic' });
++
++// Registrace
++await auth.register('uzivatel', 'bezpecneheslo1', 'admin');
++
++// Prihlaseni
++const { accessToken, refreshToken } = await auth.login('uzivatel', 'bezpecneheslo1');
++
++// Overeni tokenu
++const payload = auth.verifyToken(accessToken);
++
++// Express middleware
++app.get('/chraneno', auth.authenticate(), (req, res) => {
++  res.json({ uzivatel: req.user });
++});
++
++app.get('/admin', auth.authenticate(), auth.authorize('admin'), (req, res) => {
++  res.json({ zprava: 'Pristup povolen' });
++});
++```
++
++## Testy
++
++```bash
++npm test
++```
++
++## Bezpecnostni poznamky
++
++- Parametr `secret` je **povinny** -- modul vyhodi chybu, pokud neni zadan.
++- Hesla jsou hashovana pomoci bcrypt.
++- Tokeny lze odvolat pomoci metody `revokeToken()`.
+diff --git a/__tests__/auth.test.js b/__tests__/auth.test.js
+index 6a11da7..22baaa4 100644
+--- a/__tests__/auth.test.js
++++ b/__tests__/auth.test.js
+@@ -8,9 +8,12 @@ describe('AuthModule', () => {
+   });
+ 
+   describe('constructor', () => {
+-    it('should use default values when no options provided', () => {
+-      const defaultAuth = new AuthModule();
+-      expect(defaultAuth.secret).toBe('default-secret-change-in-production');
++    it('should throw when no secret is provided', () => {
++      expect(() => new AuthModule()).toThrow('A secret key is required');
++    });
++
++    it('should use default values for non-secret options', () => {
++      const defaultAuth = new AuthModule({ secret: 'test-secret' });
+       expect(defaultAuth.tokenExpiry).toBe('1h');
+       expect(defaultAuth.refreshTokenExpiry).toBe('7d');
+       expect(defaultAuth.saltRounds).toBe(10);
+diff --git a/package.json b/package.json
+index 2cdb3ab..7c7beb2 100644
+--- a/package.json
++++ b/package.json
+@@ -8,7 +8,7 @@
+   },
+   "repository": {
+     "type": "git",
+-    "url": "http://local_proxy@127.0.0.1:58388/git/Slapeto23/Slapeto23"
++    "url": "https://github.com/Slapeto23/Slapeto23.git"
+   },
+   "keywords": [],
+   "author": "",
+diff --git a/src/auth.js b/src/auth.js
+index dd3d183..3bffb32 100644
+--- a/src/auth.js
++++ b/src/auth.js
+@@ -3,13 +3,15 @@ const crypto = require('crypto');
+ const jwt = require('jsonwebtoken');
+ 
+ const SALT_ROUNDS = 10;
+-const DEFAULT_SECRET = 'default-secret-change-in-production';
+ const DEFAULT_TOKEN_EXPIRY = '1h';
+ const DEFAULT_REFRESH_TOKEN_EXPIRY = '7d';
+ 
+ class AuthModule {
+   constructor(options = {}) {
+-    this.secret = options.secret || DEFAULT_SECRET;
++    if (!options.secret) {
++      throw new Error('A secret key is required. Pass it via options.secret.');
++    }
++    this.secret = options.secret;
+     this.tokenExpiry = options.tokenExpiry || DEFAULT_TOKEN_EXPIRY;
+     this.refreshTokenExpiry = options.refreshTokenExpiry || DEFAULT_REFRESH_TOKEN_EXPIRY;
+     this.saltRounds = options.saltRounds || SALT_ROUNDS;
+-- 
+2.43.0
+

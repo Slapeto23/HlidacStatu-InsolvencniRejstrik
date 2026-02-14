@@ -1,46 +1,115 @@
-# Security Audit Report - Sensitive Data Scan
+# Audit repozitaru -- Citliva data, .gitignore, artefakty, README
 
-**Date:** 2026-02-14
-**Scope:** All public repositories of Slapeto23
+**Datum:** 2026-02-14
+**Rozsah:** Vsechny verejne repozitare Slapeto23
 
-## Repositories Audited
+---
 
-| # | Repository | Status |
-|---|-----------|--------|
-| 1 | Slapeto23/HlidacStatu-InsolvencniRejstrik | Clean |
-| 2 | Slapeto23/tanstack-template | Clean |
-| 3 | Slapeto23/Slapeto23 | 2 findings (see below) |
-| 4 | Slapeto23/packaging.python.org | Clean |
-| 5 | Slapeto23/servers | Clean |
-| 6 | Slapeto23/pi-explorer | Clean |
-| 7 | Slapeto23/nextjs-ai-chatbot | Does not exist |
-| 8 | Slapeto23/desktop-tutorial | Does not exist |
+## 1. Prehled repozitaru
 
-## Findings
+| # | Repozitar | Citliva data | .gitignore | Artefakty | README CZ |
+|---|-----------|-------------|------------|-----------|-----------|
+| 1 | HlidacStatu-InsolvencniRejstrik | Cisty | OK (331 radku) | Zadne | Uz existuje |
+| 2 | tanstack-template | Cisty | Vylepseno | Zadne | Pridano (README.cs.md) |
+| 3 | Slapeto23 | 2 nalezy -- OPRAVENO | Vylepseno | Zadne | Pridano (README.md) |
+| 4 | packaging.python.org | Cisty | OK | Zadne | Pridano (README.cs.md) |
+| 5 | servers | Cisty | Vynikajici (301 radku) | Zadne | Pridano (README.cs.md) |
+| 6 | pi-explorer | Cisty | OK | Zadne | Pridano (README.cs.md) |
+| 7 | nextjs-ai-chatbot | Neexistuje | -- | -- | -- |
+| 8 | desktop-tutorial | Neexistuje | -- | -- | -- |
 
-### Finding 1: Hardcoded Default JWT Secret (Medium Severity)
+---
 
-- **Repository:** `Slapeto23/Slapeto23`
-- **File:** `src/auth.js`, line 6
-- **Content:** `const DEFAULT_SECRET = 'default-secret-change-in-production';`
-- **Risk:** If `AuthModule` is instantiated without a custom `secret` option, JWTs are signed with this publicly known string, enabling token forgery.
-- **Recommendation:** Remove the default value and throw an error when `secret` is not provided.
+## 2. Opravene bezpecnostni nalezy (Slapeto23/Slapeto23)
 
-### Finding 2: Internal Proxy URL in package.json (Low Severity)
+### Nalez 1: Hardcoded JWT secret -- OPRAVENO
 
-- **Repository:** `Slapeto23/Slapeto23`
-- **File:** `package.json`, repository URL field
-- **Content:** `"url": "http://local_proxy@127.0.0.1:58388/git/Slapeto23/Slapeto23"`
-- **Risk:** Exposes internal development infrastructure details (local Git proxy on port 58388). No password is embedded.
-- **Recommendation:** Replace with standard GitHub URL: `https://github.com/Slapeto23/Slapeto23.git`
+- **Soubor:** `src/auth.js`, radek 6
+- **Puvodni kod:** `const DEFAULT_SECRET = 'default-secret-change-in-production';`
+- **Oprava:** Odstranen vychozi secret. Konstruktor nyni vyzaduje `secret` jako povinny parametr a vyhodi chybu, pokud neni zadan.
+- **Testy:** Vsech 69 testu prochazi po uprave.
 
-## Summary
+### Nalez 2: Interni proxy URL -- OPRAVENO
 
-**No real secrets (API keys, passwords, tokens, private keys, or database credentials) were found in any repository.** All repositories follow good practices:
+- **Soubor:** `package.json`, pole `repository.url`
+- **Puvodni URL:** `http://local_proxy@127.0.0.1:58388/git/Slapeto23/Slapeto23`
+- **Oprava:** Nahrazeno standardni GitHub URL: `https://github.com/Slapeto23/Slapeto23.git`
 
-- `.env` files are properly gitignored where applicable
-- Sensitive values are read from environment variables at runtime
-- README examples and `.env.example` files contain only obvious placeholders
-- CI/CD workflows use GitHub Secrets / OIDC, not hardcoded values
+---
 
-The two findings in `Slapeto23/Slapeto23` are security anti-patterns rather than actual credential leaks, but should still be addressed.
+## 3. Audit .gitignore
+
+### HlidacStatu-InsolvencniRejstrik -- OK
+Komplexni .gitignore pro Visual Studio (331 radku). Pokryva vsechny build artefakty, NuGet balicky, IDE soubory.
+
+### tanstack-template -- VYLEPSENO
+Puvodni .gitignore obsahoval jen 8 zaznamu. Doplneny:
+- `.env.local`, `.env.*.local` (lokalni env soubory)
+- `*.log`, `npm-debug.log*`, `yarn-debug.log*` (logy)
+- `.idea/`, `*.swp`, `*.swo`, `*~` (IDE soubory)
+- `*.tsbuildinfo` (TypeScript cache)
+- `coverage/` (testovaci pokryti)
+
+### Slapeto23 -- VYLEPSENO
+Puvodni .gitignore obsahoval jen `node_modules/`. Doplneny:
+- `dist/`, `build/`, `coverage/` (build artefakty)
+- `.env`, `.env.local`, `.env.*.local` (env soubory)
+- `*.log`, `npm-debug.log*` (logy)
+- `.DS_Store`, `.idea/`, `.vscode/`, `*.swp` (system/IDE)
+
+### packaging.python.org -- OK
+Minimalni ale dostatecny pro dokumentacni projekt (Sphinx). Pokryva `build/`, `*.pyc`, `__pycache__`, `.nox`.
+
+### servers -- VYNIKAJICI
+Komplexni .gitignore (301 radku) pokryvajici JS i Python ekosystem, env soubory, credentials, IDE soubory.
+
+### pi-explorer -- OK
+Dostatecny pro React projekt. Pokryva `node_modules`, `build`, `coverage`, `.env`, `.DS_Store`, logy.
+
+---
+
+## 4. Audit commitnutych artefaktu
+
+Zadny repozitar neobsahuje commitnute problematicke soubory:
+- Zadne `node_modules/`
+- Zadne `.env` soubory s realnimi hodnotami
+- Zadne build artefakty (`dist/`, `build/`, `bin/`, `obj/`)
+- Zadne `coverage/` slozky
+- Zadne `__pycache__/` nebo `*.pyc`
+- Zadne zkompiliovane binarne soubory
+
+---
+
+## 5. Ceske README
+
+| Repozitar | Soubor | Popis |
+|-----------|--------|-------|
+| HlidacStatu-InsolvencniRejstrik | `README.md` | Jiz existovalo v cestine |
+| Slapeto23 | `README.md` | Vytvoreno -- popis autentizacniho modulu |
+| tanstack-template | `README.cs.md` | Vytvoreno -- popis chatovaci sablony |
+| packaging.python.org | `README.cs.md` | Vytvoreno -- popis prirucky pro balickovani |
+| servers | `README.cs.md` | Vytvoreno -- popis MCP serveru |
+| pi-explorer | `README.cs.md` | Vytvoreno -- popis prohlizece bloku |
+
+---
+
+## 6. Aplikace zmen
+
+Zmeny pro ostatni repozitare jsou ulozene jako patch soubory ve slozce `patches/`:
+
+```bash
+# Slapeto23/Slapeto23 (bezpecnostni opravy + .gitignore + README)
+cd ~/Slapeto23 && git am < patches/Slapeto23.patch
+
+# Slapeto23/tanstack-template (.gitignore + README)
+cd ~/tanstack-template && git am < patches/tanstack-template.patch
+
+# Slapeto23/packaging.python.org (README)
+cd ~/packaging.python.org && git am < patches/packaging.python.org.patch
+
+# Slapeto23/servers (README)
+cd ~/servers && git am < patches/servers.patch
+
+# Slapeto23/pi-explorer (README)
+cd ~/pi-explorer && git am < patches/pi-explorer.patch
+```

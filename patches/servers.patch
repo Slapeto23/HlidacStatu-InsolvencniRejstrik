@@ -1,0 +1,79 @@
+From 996de511e3743c37fb3711e3fede6d02edf2efe7 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 14 Feb 2026 20:14:44 +0000
+Subject: [PATCH] Add Czech README
+
+- Add README.cs.md with Czech project description
+
+https://claude.ai/code/session_01VcMEvQucz22w1NrnLvAWdr
+---
+ README.cs.md | 57 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 README.cs.md
+
+diff --git a/README.cs.md b/README.cs.md
+new file mode 100644
+index 0000000..2d5fb81
+--- /dev/null
++++ b/README.cs.md
+@@ -0,0 +1,57 @@
++# MCP Servery (Model Context Protocol)
++
++Toto je kolekce referencnich implementaci serveru pro [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) od Anthropic.
++
++## Co je MCP?
++
++Model Context Protocol umoznuje velkym jazykovym modelum (LLM) bezpecny a rizeny pristup k nastrojum a datovym zdrojum. Kazdy server je implementovan v TypeScript nebo Python SDK.
++
++## Referencni servery
++
++- **AWS KB Retrieval** -- Vyhledavani v AWS Knowledge Base
++- **Brave Search** -- Webove vyhledavani pomoci Brave API
++- **EverArt** -- Generovani obrazku pomoci AI
++- **Fetch** -- Stahovani a konverze weboveho obsahu
++- **Filesystem** -- Bezpecne operace se soubory
++- **Git** -- Prace s Git repozitari
++- **GitHub** -- Sprava repozitaru a GitHub API
++- **GitLab** -- Sprava projektu na GitLab
++- **Google Drive** -- Pristup k souborum na Google Drive
++- **Google Maps** -- Lokacni sluzby a navigace
++- **Memory** -- Perzistentni pamet zalozena na knowledge grafu
++- **PostgreSQL** -- Pristup k databazi (jen cteni)
++- **Puppeteer** -- Automatizace prohlizece
++- **Sentry** -- Analyza chyb ze Sentry.io
++- **Sequential Thinking** -- Dynamicke reseni problemu
++- **Slack** -- Sprava kanalu a zprav
++- **SQLite** -- Pristup k SQLite databazi
++- **Time** -- Konverze casu a casovych zon
++
++## Pouziti
++
++TypeScript servery:
++```bash
++npx -y @modelcontextprotocol/server-memory
++```
++
++Python servery:
++```bash
++uvx mcp-server-git
++```
++
++## Konfigurace pro Claude Desktop
++
++```json
++{
++  "mcpServers": {
++    "memory": {
++      "command": "npx",
++      "args": ["-y", "@modelcontextprotocol/server-memory"]
++    }
++  }
++}
++```
++
++## Licence
++
++MIT -- viz soubor [LICENSE](LICENSE).
+-- 
+2.43.0
+

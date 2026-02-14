@@ -1,0 +1,74 @@
+From b5467d5ee98f2edf3863ec881340934a4a010bb2 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 14 Feb 2026 20:14:48 +0000
+Subject: [PATCH] Add Czech README
+
+- Add README.cs.md with Czech project description
+
+https://claude.ai/code/session_01VcMEvQucz22w1NrnLvAWdr
+---
+ README.cs.md | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 README.cs.md
+
+diff --git a/README.cs.md b/README.cs.md
+new file mode 100644
+index 0000000..0702e57
+--- /dev/null
++++ b/README.cs.md
+@@ -0,0 +1,52 @@
++# Pi Explorer
++
++Prohlizec bloku pro [Pi Blockchain](https://minepi.com). Zalozeno na repozitari Chrise Hatche.
++
++Pro pouziti navstivte Pi aplikaci [pi://blockchain.pi](pi://blockchain.pi) v [Pi Browseru](https://developers.minepi.com) nebo [https://minepi.com/blockexplorer](https://minepi.com/blockexplorer).
++
++## Funkce
++
++- Prochazeni bloku, transakcci a uctu na Pi blockchainu
++- Podpora privatnich, testovacich a verejnych siti
++- Vicejazycne rozhrani (14+ jazyku)
++- Responzivni design
++
++## Technologie
++
++- **Framework:** React 16 s React Router
++- **Build:** Webpack 3 s Babel
++- **Testy:** Jest s Enzyme
++- **Blockchain:** Stellar SDK 8.2.3
++- **Kontejnerizace:** Docker a Kubernetes
++
++## Vyvoj
++
++Spusteni:
++```bash
++npm install && npm start
++```
++
++Testy:
++```bash
++npm test
++```
++
++Build:
++```bash
++npm run build
++```
++
++## Pripojeni k siti
++
++Ve vychozim nastaveni se pripojuje k lokalni instanci Horizon na http://localhost:8000. Pro pripojeni k testnetu nebo verejne siti definujte aliasy:
++
++```
++127.0.1.1  testnet.local
++127.0.1.1  publicnet.local
++```
++
++Pote navstivte http://testnet.local:3000 nebo http://publicnet.local:3000.
++
++## Licence
++
++Apache-2.0 -- viz soubor LICENSE.
+-- 
+2.43.0
+

@@ -1,0 +1,101 @@
+From 9a3eb5118c9095181f40ad893de7c725ba61f13e Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 14 Feb 2026 20:14:37 +0000
+Subject: [PATCH] Improve .gitignore and add Czech README
+
+- Add missing patterns to .gitignore (logs, IDE files, TypeScript
+  build info, coverage directory, env local files)
+- Add README.cs.md with Czech project description
+
+https://claude.ai/code/session_01VcMEvQucz22w1NrnLvAWdr
+---
+ .gitignore   | 21 ++++++++++++++++++++-
+ README.cs.md | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 65 insertions(+), 1 deletion(-)
+ create mode 100644 README.cs.md
+
+diff --git a/.gitignore b/.gitignore
+index 57a7466..850f94f 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -5,4 +5,23 @@ dist-ssr
+ *.local
+ .vinxi
+ .netlify
+-.env
+\ No newline at end of file
++.env
++.env.local
++.env.*.local
++
++# Logs
++*.log
++npm-debug.log*
++yarn-debug.log*
++
++# IDE
++.idea/
++*.swp
++*.swo
++*~
++
++# TypeScript
++*.tsbuildinfo
++
++# Testing
++coverage/
+\ No newline at end of file
+diff --git a/README.cs.md b/README.cs.md
+new file mode 100644
+index 0000000..c08046d
+--- /dev/null
++++ b/README.cs.md
+@@ -0,0 +1,45 @@
++# TanStack Chat Sablona
++
++Moderni chatovaci sablona postavena na TanStack Router s integraci Claude AI. Nabizi ciste a responzivni rozhrani.
++
++## Funkce
++
++### AI schopnosti
++- Pohaneno modelem Claude 3.5 Sonnet
++- Formatovani v Markdown se zvyraznenim syntaxe
++- Nastavitelne systemove prompty
++- Streamovani odpovedi v realnem case
++
++### Uzivatelsky zazitek
++- Moderni UI s Tailwind CSS a Lucide ikonami
++- Sprava konverzaci
++- Sprava API klicu
++- Vykreslovani Markdownu se zvyraznenim kodu
++
++## Technologie
++
++- **Frontend:** React 19 s TanStack Start
++- **Smerovani:** TanStack Router
++- **Stav:** TanStack Store
++- **Databaze:** Convex (volitelne)
++- **Styly:** Tailwind CSS 4
++- **AI:** Anthropic Claude API
++- **Build:** Vite 6 s Vinxi
++
++## Zacatek
++
++1. Naklonujte repozitar
++2. Nainstalujte zavislosti: `npm install`
++3. Nastavte promenne prostredi: `cp .env.example .env`
++4. Upravte `.env` a pridejte svuj Anthropic API klic
++5. Spustte vyvojovy server: `npm run dev`
++
++Aplikace bude dostupna na [http://localhost:3000](http://localhost:3000).
++
++## Nasazeni
++
++Sablona je pripravena pro nasazeni na Netlify. Kliknete na tlacitko "Deploy to Netlify" v hlavnim README.
++
++## Licence
++
++Viz soubor [LICENSE](LICENSE).
+-- 
+2.43.0
+
