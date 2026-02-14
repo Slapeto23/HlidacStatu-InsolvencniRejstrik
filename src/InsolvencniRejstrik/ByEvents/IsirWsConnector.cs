@@ -419,7 +419,7 @@ namespace InsolvencniRejstrik.ByEvents
 				Console.WriteLine($"   Data rizeni: R{GlobalStats.InsolvencyProceedingGet}/W{GlobalStats.InsolvencyProceedingSet}");
 				Console.WriteLine();
 				Console.WriteLine($"   Errors (total: {GlobalStats.TotalErrors}):");
-				foreach (var error in GlobalStats.Errors.ToArray())
+				foreach (var error in GlobalStats.GetErrorsSnapshot())
 				{
 					Console.WriteLine($"    - {error}");
 				}

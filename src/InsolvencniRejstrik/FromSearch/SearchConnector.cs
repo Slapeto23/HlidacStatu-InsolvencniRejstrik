@@ -52,7 +52,7 @@ namespace InsolvencniRejstrik.FromSearch
 				var duration = DateTime.Now - start;
 				Console.WriteLine($"   Doba behu: {duration.Hours:00}:{duration.Minutes:00}:{duration.Seconds:00}");
 				Console.WriteLine();
-				try
+				lock (ErrorsLock)
 				{
 					if (Errors.Any())
 					{
@@ -62,10 +62,6 @@ namespace InsolvencniRejstrik.FromSearch
 							Console.WriteLine($"    > {error}");
 						}
 					}
-				}
-				catch (Exception)
-				{
-					// do nothing
 				}
 
 				Thread.Sleep(1000);
@@ -85,6 +81,7 @@ namespace InsolvencniRejstrik.FromSearch
 		private Task[] TaskStore;
 		private ConcurrentQueue<Rizeni> ForDetailRequest = new ConcurrentQueue<Rizeni>();
 		private ConcurrentQueue<Rizeni> ForStore = new ConcurrentQueue<Rizeni>();
+		private readonly object ErrorsLock = new object();
 		private List<string> Errors = new List<string>();
 
 		private HtmlNode MakeSearchRequest(HtmlWeb client, DateTime fromEndOfPeriodDate)
@@ -255,11 +252,14 @@ namespace InsolvencniRejstrik.FromSearch
 
 		private void AddError(string thread, Exception e)
 		{
-			if (Errors.Count > 10)
+			lock (ErrorsLock)
 			{
-				Errors.Remove(Errors.First());
+				if (Errors.Count > 10)
+				{
+					Errors.Remove(Errors.First());
+				}
+				Errors.Add($"[{DateTime.Now.ToShortTimeString()}] {thread} - {e.Message}");
 			}
-			Errors.Add($"[{DateTime.Now.ToShortTimeString()}] {thread} - {e.Message}");
 			Thread.Sleep(1000);
 		}
 

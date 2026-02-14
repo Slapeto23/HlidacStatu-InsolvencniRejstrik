@@ -16,6 +16,7 @@ namespace InsolvencniRejstrik.ByEvents
 		public int NewOsobaCount { get; set; }
 		public int OsobaChangedEvent { get; set; }
 		public int AdresaChangedEvent { get; set; }
+		private readonly object ErrorsLock = new object();
 		public List<string> Errors { get; }
 		public int TotalErrors { get; private set; }
 		public long LastEventId { get; set; }
@@ -30,12 +31,23 @@ namespace InsolvencniRejstrik.ByEvents
 
 		public void WriteError(string message, long eventId)
 		{
-			if (Errors.Count > 10)
+			lock (ErrorsLock)
 			{
-				Errors.RemoveAt(Errors.Count - 1);
+				if (Errors.Count > 10)
+				{
+					Errors.RemoveAt(Errors.Count - 1);
+				}
+				Errors.Insert(0, $"[{DateTime.Now:HH:mm:ss}] {message} ({eventId})");
+				TotalErrors++;
 			}
-			Errors.Insert(0, $"[{DateTime.Now:HH:mm:ss}] {message} ({eventId})");
-			TotalErrors++;
+		}
+
+		public string[] GetErrorsSnapshot()
+		{
+			lock (ErrorsLock)
+			{
+				return Errors.ToArray();
+			}
 		}
 
 		public TimeSpan Duration() {
